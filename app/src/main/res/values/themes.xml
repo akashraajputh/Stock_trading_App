@@ -1,0 +1,42 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.CSCI571AndriodStocks" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/grey</item>
+        <item name="colorPrimaryDark">@color/grey</item>
+        <item name="colorPrimaryVariant">@color/grey</item>
+
+<!--        <item name="actionBarStyle">@style/MySearchViewStyle</item>-->
+
+    </style>
+
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name='MySearchViewStyle' parent='Widget.AppCompat.SearchView'>
+        
+        <!-- Background for the search query section (e.g. EditText) -->
+<!--        <item name="queryBackground">@drawable/ic_search_black_24dp</item>-->
+        <!-- Background for the actions section (e.g. voice, submit) -->
+<!--        <item name="submitBackground">...</item>-->
+<!--        &lt;!&ndash; Close button icon &ndash;&gt;-->
+<!--        <item name="closeIcon">...</item>-->
+<!--        &lt;!&ndash; Search button icon &ndash;&gt;-->
+<!--        <item name="searchIcon">...</item>-->
+<!--        &lt;!&ndash; Go/commit button icon &ndash;&gt;-->
+<!--        <item name="goIcon">...</item>-->
+<!--        &lt;!&ndash; Voice search button icon &ndash;&gt;-->
+<!--        <item name="voiceIcon"></item>-->
+        <!-- Commit icon shown in the query suggestion row -->
+        <item name="commitIcon">@drawable/ic_search_black_24dp</item>
+<!--        &lt;!&ndash; Layout for query suggestion rows &ndash;&gt;-->
+<!--        <item name="suggestionRowLayout">...</item>-->
+    </style>
+
+
+
+</resources>

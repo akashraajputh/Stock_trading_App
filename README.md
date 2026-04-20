@@ -24,6 +24,9 @@ An android app for virtual stock trading.
 </p>
 
 
+## Developed by
+**Akash Kumar Singh**
+
 ## Summary
 This Android app provides a platform for stocks trading, including, features such as searching company stock details, buying/selling stocks, keeping track of stock porfolio/favorites, viewing stock SMA charts and news, allowing sharing news on twitter for a given stock. Custom Nodejs backend deployed using GCP is used for all API calls. The backend uses [Tingo API](https://api.tiingo.com/) for all stock related data, and [News API](https://newsapi.org/) for displaying stock related news. [Highcharts](https://www.highcharts.com/) is used for displaying the SMA chart data for a given ticker.
 
@@ -61,10 +64,123 @@ This Android app provides a platform for stocks trading, including, features suc
 * Once you have successfully added the virtual device, you should see it as shown below. Now you can click the run button and it should load the emulator with the app.
 [![add emulator](./other/run-app.png)]()
 * The emulator will launch and will automatically open the stock app as shown below. [![lauched app](./other/lauch-app.png)]()
-* Note that **no API calls will work** i.e. the auto complete or search button will not work since the backend has been removed from `Google Cloud platform (GCP)`. You might have to either deploy the backend or try to figure out how to redirect the API call to a locally run backend. The code for backend can be found [here](https://github.com/rehmanis/stocks-angular/blob/master/routes/api.js) for the one used in this app. There is also a [serverless version](https://github.com/rehmanis/CSCI571-Stocks-Serverless/blob/master/index.js) for the backend. **Note** for any API that you use such as [`News API`](https://newsapi.org/) or [`Tingo`](https://api.tiingo.com/) for stocks, you will have to generate a token/API key and replace it in the backend code. As of now the backend is using a hardcoded token for these api in the NodeJs calls (very bad practice) as can be seen [here](https://github.com/rehmanis/stocks-angular/blob/master/routes/api.js#L27) where `token=` is hardcoded.
-* Places where `GCP` deployed backend API that was being used and is now removed from GCP are as follows: 
-  * [DetailsActivity.java:L56-L59](https://github.com/rehmanis/stocks-android/blob/master/app/src/main/java/com/example/csci571andriodstocks/DetailsActivity.java#L56-L59)
-  * [MainActivity.java:L61-L62](https://github.com/rehmanis/stocks-android/blob/master/app/src/main/java/com/example/csci571andriodstocks/MainActivity.java#L61-L62)
+
+## Backend Setup & Configuration
+
+### Important: Backend is Required
+**⚠️ Note:** The GCP backend has been removed. **No API calls will work** (auto-complete, search, stock data) without a functional backend. The app requires a backend to retrieve stock data and news.
+
+### Backend Deployment Options
+
+#### Option 1: Deploy Node.js Backend
+The backend code is available here:
+- **Full Node.js Version**: [stocks-angular backend](https://github.com/rehmanis/stocks-angular/blob/master/routes/api.js)
+- **Serverless Version**: [AWS Lambda/Google Cloud Functions](https://github.com/rehmanis/CSCI571-Stocks-Serverless/blob/master/index.js)
+
+You can deploy on:
+- **Google Cloud Platform (GCP)** - Cloud Run or App Engine
+- **AWS** - Lambda with API Gateway
+- **Heroku** - For quick testing
+- **Local machine** - For development
+
+#### Option 2: Update API Endpoints
+Modify the API URLs in the Android app to point to your deployed backend:
+- [MainActivity.java](https://github.com/rehmanis/stocks-android/blob/master/app/src/main/java/com/example/csci571andriodstocks/MainActivity.java#L61-L62) (Lines 61-62)
+- [DetailsActivity.java](https://github.com/rehmanis/stocks-android/blob/master/app/src/main/java/com/example/csci571andriodstocks/DetailsActivity.java#L56-L59) (Lines 56-59)
+
+Replace the hardcoded URLs:
+```java
+public static final String SEARCH_URL = "https://YOUR_BACKEND_URL/api/search/";
+public static final String PRICE_URL = "https://YOUR_BACKEND_URL/api/price/";
+```
+
+### API Keys Required
+
+The backend requires API keys from third-party services. You must obtain these and configure them in your backend:
+
+1. **Tiingo API** (Stock Data)
+   - Sign up: [https://api.tiingo.com/](https://api.tiingo.com/)
+   - Get your API token from the dashboard
+   - Add to backend configuration
+
+2. **News API** (Stock News)
+   - Sign up: [https://newsapi.org/](https://newsapi.org/)
+   - Get your API key
+   - Add to backend configuration
+
+⚠️ **Security Note:** Never hardcode API keys in the app or commit them to version control. Use environment variables or secure configuration management in your backend.
+
+### Example Backend Configuration
+
+In your Node.js backend (e.g., routes/api.js), set up your API keys:
+```javascript
+const TIINGO_API_KEY = process.env.TIINGO_API_KEY; // Use environment variable
+const NEWS_API_KEY = process.env.NEWS_API_KEY;     // Use environment variable
+```
+
+Then in your deployment environment, set these variables:
+- **GCP**: Use Secret Manager or Cloud Build environment variables
+- **AWS Lambda**: Use Lambda environment variables or Secrets Manager
+- **Local**: Use .env file with dotenv package
+- **Heroku**: Use Config Vars in your app settings
+
+## Dependencies
+
+### Project Requirements
+- **Java**: JDK 1.8.0 (Java 8)
+- **Android SDK**: API Level 30 (recommended API 33+)
+- **Android Studio**: Latest version recommended
+- **Gradle**: Configured in the project (gradlew)
+
+### Current Dependencies
+- **androidx.appcompat**: 1.2.0
+- **Android Material**: 1.2.1
+- **Volley**: 1.1.1 (HTTP requests)
+- **Gson**: 2.8.6 (JSON parsing)
+- **Picasso**: 2.5.2 (Image loading)
+- **Sectioned RecyclerView Adapter**: 3.2.0
+- **Espresso**: 3.3.0 (Testing)
+
+⚠️ **Note:** Some dependencies are from 2020-2021. Consider updating to latest versions for:
+- Better security patches
+- Improved performance
+- Android 14+ compatibility
+
+## Known Issues & Limitations
+
+1. **Backend is Down** - Original GCP backend has been removed and must be redeployed
+2. **API Keys Hardcoded** - Current backend uses hardcoded API keys (security risk). Use environment variables instead.
+3. **Outdated Dependencies** - Some libraries could be updated for better compatibility
+4. **Android API Level** - Target SDK 30 could be updated to SDK 34+ for latest Android features
+5. **Limited Testing** - Only tested with Pixel 2 XL emulator (API 28)
+
+## Troubleshooting
+
+### "No API calls work"
+- Ensure backend is deployed and running
+- Verify API URLs are correctly configured in MainActivity.java and DetailsActivity.java
+- Check that API keys are valid in your backend
+- Look at logcat output for network errors
+
+### "Search/AutoComplete not working"
+- Check if backend is accessible from the emulator
+- Use `adb logcat` to see detailed error messages
+- Verify internet permission is granted: `android.permission.INTERNET`
+
+### "Build fails with Gradle error"
+- Ensure you're using JDK 1.8.0
+- Run `Sync project with Gradle Files` in Android Studio
+- Clear and rebuild the project
+
+## Future Improvements
+
+- [ ] Update dependencies to latest versions
+- [ ] Migrate from Volley to Retrofit2 or OkHttp
+- [ ] Add unit tests
+- [ ] Support Android 14+ features
+- [ ] Implement secure API key management
+- [ ] Add offline caching for stock data
+- [ ] Dark mode support
   
 
 
